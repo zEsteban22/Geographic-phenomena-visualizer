@@ -13,7 +13,7 @@ public class HouseBuilder : MonoBehaviour
         if (Physics.Raycast(handTransform.transform.position, handTransform.forward, out hit))
             if (hit.collider.gameObject.tag == "Terrain"){
                 Vector3 point = hit.point;
-                point.y += 4.6f;
+                point.y += 4.6f;//This is to place the house right over the terrain
                 Instantiate(buildingModel, point, Quaternion.identity);
             }
     }

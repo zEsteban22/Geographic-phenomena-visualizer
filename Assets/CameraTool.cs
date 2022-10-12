@@ -12,12 +12,14 @@ public class CameraTool : MonoBehaviour
         GameObject teleportDestination = new GameObject("Teleport destination");
         teleportDestination.transform.position = transform.position;
         teleportDestination.transform.rotation = transform.rotation;
+        Debug.Log(transform.rotation);
+        Debug.Log(gameObject.transform.rotation);
         
         //Create a child of MinimapDisplay 
         GameObject newMinimapIcon = Instantiate(TeleportObject, MinimapDisplay.transform);
         //move it to the correct position according to CameraTool's MinimapCamera view position at the picture time.
-        //map from (-50,-50),(50,50) to (14.59, 37.065),(15.218, 37.558)
         // Para mapear: x_mapeado = x_origenMapa + (x_foto) /x_maxima * mapeo_máximo
+
         newMinimapIcon.transform.rotation = Quaternion.Euler(0, 0, 0);
         newMinimapIcon.transform.Translate(transform.position /50 *0.275f);
         //Put the teleportDestination as objective of the minimapIcon's teleportation anchor component

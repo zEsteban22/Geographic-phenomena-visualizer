@@ -7,7 +7,8 @@ using System.Text.RegularExpressions;
 
 public class GameSystem : MonoBehaviour
 {
-    public Text text;//Just for dev version
+    public Text text;
+    public Slider slider;
     public List<GameObject> meshes;
     public GameObject terrain;
     public static float timeStep = 0;
@@ -32,15 +33,16 @@ public class GameSystem : MonoBehaviour
         }
         int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
 
-        DestroyImmediate(terrain.GetComponent<MeshCollider>());
-        MeshCollider newCollider = terrain.AddComponent<MeshCollider>();
-        newCollider.sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
-        
-        text.text = timeStep.ToString("F2");//dev only
+        terrain.GetComponent<MeshCollider>().sharedMesh = null;
+        terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
+        text.text = timeStep.ToString("F2");
+        slider.value = timeStep/LAST_STEP;
         
     
     }
+
+    
 
     public static void stop()
     {
@@ -73,6 +75,10 @@ public class GameSystem : MonoBehaviour
             angulo = angulo/0.7f/2f;
         timeSpeedDown = (float) -Math.Cos(Math.PI * angulo);
 
+    }
+
+    public static void changeTime(Slider slider){
+        timeStep = LAST_STEP*slider.value;
     }
 
     public static void changeTime(GameObject iconSelected){
