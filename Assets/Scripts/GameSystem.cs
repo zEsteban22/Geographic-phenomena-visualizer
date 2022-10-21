@@ -9,6 +9,7 @@ public class GameSystem : MonoBehaviour
 {
     public Text text;
     public Slider slider;
+    public GameObject growingTree;
     public List<GameObject> meshes;
     public GameObject terrain;
     public static float timeStep = 0;
@@ -16,6 +17,15 @@ public class GameSystem : MonoBehaviour
     public static float timeSpeedDown = 1;
 
     private static int LAST_STEP = 60;
+    private float t=0;
+    void FixedUpdate(){
+        t += Time.deltaTime;
+        if (t>=1f){
+            terrain.GetComponent<MeshCollider>().sharedMesh = null;
+            terrain.GetComponent<MeshCollider>().sharedMesh = terrain.GetComponent<MeshFilter>().sharedMesh; 
+            t = 0f;
+        }
+    }
     void Start()
     {
         text.text = timeStep.ToString("F2");
@@ -31,15 +41,12 @@ public class GameSystem : MonoBehaviour
             timeStep = timeSpeedDown = 0;
             timeStep = LAST_STEP;
         }
+        float treeGrowthState = timeStep / LAST_STEP * 4;
+        growingTree.transform.localScale = Vector3.one * treeGrowthState;
         int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
-
         terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
-        terrain.GetComponent<MeshCollider>().sharedMesh = null;
-        terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
         text.text = timeStep.ToString("F2");
         slider.value = timeStep/LAST_STEP;
-        
-    
     }
 
     
