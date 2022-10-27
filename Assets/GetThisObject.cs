@@ -9,6 +9,5 @@ public class GetThisObject : MonoBehaviour
     public void Activate(){
         GameSystem.changeTime(gameObject);
         _base.transform.position = GetComponent<TeleportationAnchor>().teleportAnchorTransform.position;
-        //mover todos los objetos de la base junto con el usuario
     }
 }

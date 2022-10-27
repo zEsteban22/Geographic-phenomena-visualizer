@@ -7,45 +7,40 @@ using System.Text.RegularExpressions;
 
 public class GameSystem : MonoBehaviour
 {
-    public Text text;
+    //public Text text;
     public Slider slider;
     public GameObject growingTree;
     public List<GameObject> meshes;
     public GameObject terrain;
+    
     public static float timeStep = 0;
     public static float timeSpeedUp = 1;
     public static float timeSpeedDown = 1;
-
+    private static float _lastTimeSpeedDown = 0;
     private static int LAST_STEP = 60;
-    private float t=0;
-    void FixedUpdate(){
-        t += Time.deltaTime;
-        if (t>=1f){
-            terrain.GetComponent<MeshCollider>().sharedMesh = null;
-            terrain.GetComponent<MeshCollider>().sharedMesh = terrain.GetComponent<MeshFilter>().sharedMesh; 
-            t = 0f;
-        }
-    }
     void Start()
     {
-        text.text = timeStep.ToString("F2");
+        //text.text = timeStep.ToString("F2");
     }
 
     void Update()
     {
         timeStep += Time.deltaTime * timeSpeedUp * timeSpeedDown;
         if (timeStep < 0f){
-            timeStep = timeSpeedDown = 0;
+            PlayPauseFunctionality.putPlay();
+            stop();
         }
         if (timeStep > LAST_STEP){
-            timeStep = timeSpeedDown = 0;
+            PlayPauseFunctionality.putPlay();
             timeStep = LAST_STEP;
+            pause();
         }
         float treeGrowthState = timeStep / LAST_STEP * 4;
         growingTree.transform.localScale = Vector3.one * treeGrowthState;
         int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
         terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
-        text.text = timeStep.ToString("F2");
+        terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshCollider>().sharedMesh;
+        //text.text = timeStep.ToString("F2");
         slider.value = timeStep/LAST_STEP;
     }
 
@@ -53,18 +48,20 @@ public class GameSystem : MonoBehaviour
 
     public static void stop()
     {
+        _lastTimeSpeedDown = timeSpeedDown;
         timeSpeedDown = 0;
         timeStep = 0;
     }
 
     public static void pause()
     {
+        _lastTimeSpeedDown = timeSpeedDown;
         timeSpeedDown = 0;
     }
 
     public static void resume()
     {
-        timeSpeedDown = 1;
+        timeSpeedDown = _lastTimeSpeedDown;
     }
 
     public static void changeSpeedUp(Transform palanca)
@@ -91,6 +88,7 @@ public class GameSystem : MonoBehaviour
     public static void changeTime(GameObject iconSelected){
         Regex re = new Regex(@"t=([^,]*,\d{2}),");
         Match m = re.Match(iconSelected.name);
+        Debug.Log(m.Groups[1]);
         timeStep = float.Parse(m.Groups[1].Value);
     }
 
