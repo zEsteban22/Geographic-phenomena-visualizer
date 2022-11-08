@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class ExploteWhenFalling : MonoBehaviour
 {
-    private bool touchedFloor = false;
-    private float timeMoving = 0;
+    private float threshold= 0.1f;
     void Update()
     {
-        if (timeMoving > 1f)
+        if (GetComponent<Rigidbody>().angularVelocity.magnitude > threshold){
             Destroy(gameObject);
-        else if (touchedFloor && GetComponent<Rigidbody>().velocity.magnitude > 0){
-            timeMoving += Time.deltaTime;
-        } else if (!touchedFloor && GetComponent<Rigidbody>().velocity.magnitude == 0) {
-            touchedFloor = true;
-        }
+        } 
     }
 }

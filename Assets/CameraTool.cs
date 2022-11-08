@@ -16,7 +16,6 @@ public class CameraTool : MonoBehaviour
             terrain_width = GameObject.Find("Terrain").GetComponent<Collider>().bounds.size.x/2;
         if (minimap_width == 0f)
             minimap_width = MinimapDisplay.GetComponent<RectTransform>().rect.width/2*0.001f;
-        Debug.Log("minimap_width: "+minimap_width);
         if (activator){
             activator = false;
             //Create an empty gameObject to use as reference for the teleportation anchor of the minimap object

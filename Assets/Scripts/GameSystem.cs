@@ -35,7 +35,7 @@ public class GameSystem : MonoBehaviour
             timeStep = LAST_STEP;
             pause();
         }
-        float treeGrowthState = timeStep / LAST_STEP * 4;
+        float treeGrowthState = timeStep / LAST_STEP;
         growingTree.transform.localScale = Vector3.one * treeGrowthState;
         int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
         terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
