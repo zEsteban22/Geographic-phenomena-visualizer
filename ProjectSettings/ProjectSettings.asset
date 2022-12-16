@@ -842,7 +842,8 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: CREST_OCEAN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
