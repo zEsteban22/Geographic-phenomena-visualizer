@@ -5,16 +5,19 @@ using UnityEngine.UI;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TMPro;
 
 public class GameSystem : MonoBehaviour
 {
-    //public Text text;
+    public TMP_Text text;
     public Slider slider;
     public TransitionSystem transitionSystem;
     public GameObject growingTree;
     public List<GameObject> meshes;
     public GameObject terrain;
-    
+    public SpriteRenderer backgroundCityRenderer;
+    public List<Sprite> citySprites;
+
     public static float timeStep = 0;
     public static float timeSpeedUp = 1;
     public static float timeSpeedDown = 0;
@@ -44,8 +47,9 @@ public class GameSystem : MonoBehaviour
             int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
             terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
             terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshCollider>().sharedMesh;
-            //text.text = timeStep.ToString("F2");
+            text.text = String.Format("timeStep = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
             slider.value = timeStep/LAST_STEP;
+            backgroundCityRenderer.sprite = citySprites[(int)Math.Round(citySprites.Count*timeStep/LAST_STEP)];
         }
     }
 

@@ -40,7 +40,7 @@ public class TransitionSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(actualRotationSpeed * Time.deltaTime/Time.timeScale, 0f, 0f);
+        transform.Rotate(actualRotationSpeed * Time.deltaTime, 0f, 0f);
         if (startTransition){
             transitioning = true;
             startTransition = false;
