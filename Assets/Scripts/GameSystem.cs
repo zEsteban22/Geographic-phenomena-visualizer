@@ -5,21 +5,25 @@ using UnityEngine.UI;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TMPro;
 
 public class GameSystem : MonoBehaviour
 {
-    //public Text text;
+    public TMP_Text text;
     public Slider slider;
     public TransitionSystem transitionSystem;
     public GameObject growingTree;
     public List<GameObject> meshes;
     public GameObject terrain;
-    
-    public static float timeStep = 0;
+    public SpriteRenderer backgroundCityRenderer;
+    public List<Sprite> citySprites; //at this moment there is 12 city sprites, one for year
+
+    public static float timeStep = 0; 
+    private static int LAST_STEP = 12; 
     public static float timeSpeedUp = 1;
     public static float timeSpeedDown = 0;
-    private static float _lastTimeSpeedDown = 1;
-    private static int LAST_STEP = 60;
+    private static float _lastTimeScale = 1;
+    private static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
     private static GameSystem _instance;
     void Start()
     {
@@ -28,59 +32,55 @@ public class GameSystem : MonoBehaviour
 
     void Update()
     {
-        if (timeSpeedDown!=0){
-            timeStep += Time.deltaTime /Time.timeScale * timeSpeedUp * timeSpeedDown;
-            if (timeStep < 0f){
-                PlayPauseFunctionality.putPlay();
-                stop();
-            }
-            if (timeStep > LAST_STEP){
-                PlayPauseFunctionality.putPlay();
-                timeStep = LAST_STEP;
-                pause();
-            }
-            float treeGrowthState = timeStep / LAST_STEP;
-            growingTree.transform.localScale = Vector3.one * treeGrowthState;
-            int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
-            terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
-            terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshCollider>().sharedMesh;
-            //text.text = timeStep.ToString("F2");
-            slider.value = timeStep/LAST_STEP;
+        timeStep += Time.deltaTime /SECONDS_PER_YEAR * timeSpeedUp * timeSpeedDown;
+        if (timeStep < 0f){
+            PlayPauseFunctionality.putPlay();
+            stop();
         }
+        if (timeStep > LAST_STEP){
+            PlayPauseFunctionality.putPlay();
+            timeStep = LAST_STEP;
+            pause();
+        }
+        float treeGrowthState = timeStep / LAST_STEP;
+        growingTree.transform.localScale = Vector3.one * treeGrowthState;
+        int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
+        //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
+        terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
+        terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshCollider>().sharedMesh;
+        text.text = String.Format("timeStep = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
+        slider.value = timeStep/LAST_STEP;
+        backgroundCityRenderer.sprite = citySprites[(int)Math.Round(citySprites.Count*timeStep/LAST_STEP)];
+        
     }
 
     
 
     public static void stop()
     {
-        pause();
         timeStep = 0;
+        pause();
+        
     }
 
     public async static void pause()
     {
-        Debug.Log("Se está poniendo pausa.");
         if(await Task.Run(()=>_instance.transitionSystem.simulationToRealTime())){
-            Debug.Log("Se terminó de poner pausa.");
-            if (timeSpeedDown != 0)
-                _lastTimeSpeedDown = timeSpeedDown;
-            timeSpeedDown = 0;
+            _lastTimeScale = Time.timeScale;
+            Time.timeScale = 1;
         } else {
-            Debug.Log("No se puso pausa. :()");
+            Debug.Log("transition stopped");
         }
     }
 
     public async static void resume()
     {
-        Debug.Log("Se está poniendo play.");
         if(await Task.Run(()=>_instance.transitionSystem.realTimeToSimulation())){
-            Debug.Log("Se terminó de poner play. tsd = "+timeSpeedDown+" | ltsd = "+_lastTimeSpeedDown);
-            timeSpeedDown = _lastTimeSpeedDown;  
+            Time.timeScale = _lastTimeScale;  
         } else {
-            Debug.Log("No se puso play. :()");
+            Debug.Log("play transition stopped");
         }
     }
-
     public static void changeSpeedUp(Transform palanca)
     {
         timeSpeedUp = (1.0f + palanca.rotation.x) / 2.0f * 10.0f ; 
