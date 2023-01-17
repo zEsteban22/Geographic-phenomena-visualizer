@@ -23,7 +23,7 @@ public class GameSystem : MonoBehaviour
     public static float timeSpeedUp = 1;
     public static float timeSpeedDown = 0;
     private static float _lastTimeScale = 1;
-    private static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
+    public static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
     private static GameSystem _instance;
     void Start()
     {
@@ -49,7 +49,7 @@ public class GameSystem : MonoBehaviour
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
-        text.text = String.Format("timeStep = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
+        text.text = String.Format("year = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
         slider.value = timeStep/LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         
