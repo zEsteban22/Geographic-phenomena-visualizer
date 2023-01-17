@@ -32,28 +32,28 @@ public class GameSystem : MonoBehaviour
 
     void Update()
     {
-        timeStep += Time.deltaTime /SECONDS_PER_YEAR * timeSpeedUp * timeSpeedDown;
+        //timeStep += Time.deltaTime /SECONDS_PER_YEAR * timeSpeedUp * timeSpeedDown;
+        timeStep += Time.deltaTime /Time.timeScale * timeSpeedUp * timeSpeedDown;
         if (timeStep < 0f){
             PlayPauseFunctionality.putPlay();
             stop();
         }
         if (timeStep > LAST_STEP){
+            pause();
             PlayPauseFunctionality.putPlay();
             timeStep = LAST_STEP;
-            pause();
         }
         float treeGrowthState = timeStep / LAST_STEP;
         growingTree.transform.localScale = Vector3.one * treeGrowthState;
-        int index = timeStep == 0 ? 0 : (int) Math.Ceiling(timeStep / LAST_STEP * meshes.Count) - 1;
+        GameObject mesh = _getElement(meshes);
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
-        terrain.GetComponent<MeshFilter>().sharedMesh = meshes[index].GetComponent<MeshFilter>().sharedMesh;
-        terrain.GetComponent<MeshCollider>().sharedMesh = meshes[index].GetComponent<MeshCollider>().sharedMesh;
+        terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
+        terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
         text.text = String.Format("timeStep = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
         slider.value = timeStep/LAST_STEP;
-        backgroundCityRenderer.sprite = citySprites[(int)Math.Round(citySprites.Count*timeStep/LAST_STEP)];
+        backgroundCityRenderer.sprite = _getElement(citySprites);
         
     }
-
     
 
     public static void stop()
@@ -66,8 +66,10 @@ public class GameSystem : MonoBehaviour
     public async static void pause()
     {
         if(await Task.Run(()=>_instance.transitionSystem.simulationToRealTime())){
-            _lastTimeScale = Time.timeScale;
-            Time.timeScale = 1;
+            //_lastTimeScale = Time.timeScale;
+            if (timeSpeedDown != 0)
+                _lastTimeScale = timeSpeedDown;
+            timeSpeedDown = 0;
         } else {
             Debug.Log("transition stopped");
         }
@@ -76,7 +78,8 @@ public class GameSystem : MonoBehaviour
     public async static void resume()
     {
         if(await Task.Run(()=>_instance.transitionSystem.realTimeToSimulation())){
-            Time.timeScale = _lastTimeScale;  
+            //Time.timeScale = _lastTimeScale;  
+            timeSpeedDown = _lastTimeScale;  
         } else {
             Debug.Log("play transition stopped");
         }
@@ -108,4 +111,8 @@ public class GameSystem : MonoBehaviour
         timeStep = float.Parse(m.Groups[1].Value);
     }
 
+    private T _getElement<T>(List<T> list) where T:UnityEngine.Object {
+        int index = timeStep == 0? 0 : (int) Math.Ceiling(timeStep/LAST_STEP * list.Count) - 1;
+        return list[index];
+    }
 }
