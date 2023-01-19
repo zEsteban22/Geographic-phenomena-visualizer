@@ -146,7 +146,7 @@ public class lb_Bird : MonoBehaviour {
 		float t = 0.0f;
 		while (t<1.0f){
 			if(!paused){
-				t+= Time.deltaTime;
+				t+= TimeInterface.deltaTime;
 				if(t>.2f && !solidCollider.enabled && controller.collideWithObjects){
 					solidCollider.enabled = true;
 				}
@@ -174,8 +174,8 @@ public class lb_Bird : MonoBehaviour {
 				finalRotation = Quaternion.LookRotation(vectorDirectionToTarget);
 				transform.rotation = Quaternion.Slerp (startingRotation,finalRotation,t);
 				anim.SetFloat (flyingDirectionHash,FindBankingAngle(transform.forward,vectorDirectionToTarget));
-				t += Time.deltaTime*0.5f;
-				GetComponent<Rigidbody>().AddForce(transform.forward * 70.0f*controller.birdScale * Time.deltaTime);
+				t += TimeInterface.deltaTime*0.5f;
+				GetComponent<Rigidbody>().AddForce(transform.forward * 70.0f*controller.birdScale * TimeInterface.deltaTime);
 
 				//Debug.DrawRay (transform.position,transform.forward,Color.green);
 
@@ -223,8 +223,8 @@ public class lb_Bird : MonoBehaviour {
 				finalRotation = Quaternion.LookRotation(vectorDirectionToTarget);
 				transform.rotation = Quaternion.Slerp (startingRotation,finalRotation,t);
 				anim.SetFloat (flyingDirectionHash,FindBankingAngle(transform.forward,vectorDirectionToTarget));
-				t += Time.deltaTime*0.5f;
-				GetComponent<Rigidbody>().AddForce(transform.forward * 70.0f*controller.birdScale * Time.deltaTime);
+				t += TimeInterface.deltaTime*0.5f;
+				GetComponent<Rigidbody>().AddForce(transform.forward * 70.0f*controller.birdScale * TimeInterface.deltaTime);
 				if (Physics.Raycast(transform.position,-Vector3.up,out hit,0.15f*controller.birdScale) && GetComponent<Rigidbody>().velocity.y < 0){
 					//if the bird is going to collide with the ground zero out vertical velocity
 					if(!hit.collider.isTrigger){
@@ -284,7 +284,7 @@ public class lb_Bird : MonoBehaviour {
 				finalRotation = Quaternion.LookRotation(vectorDirectionToTarget);
 				anim.SetFloat (flyingDirectionHash,FindBankingAngle(transform.forward,vectorDirectionToTarget));
 				transform.rotation = finalRotation;
-				GetComponent<Rigidbody>().AddForce(transform.forward * flyingForce * Time.deltaTime);
+				GetComponent<Rigidbody>().AddForce(transform.forward * flyingForce * TimeInterface.deltaTime);
 				distanceToTarget = Vector3.Distance (transform.position,target);
 				if(distanceToTarget <= 1.5f*controller.birdScale){
 					solidCollider.enabled = false;
@@ -330,7 +330,7 @@ public class lb_Bird : MonoBehaviour {
 			if(!paused){
 				transform.rotation = Quaternion.Slerp (startingRotation,finalRotation,t*4.0f);
 				transform.position = Vector3.SmoothDamp(transform.position,target,ref vel,0.5f);
-				t += Time.deltaTime;
+				t += TimeInterface.deltaTime;
 				distanceToTarget = Vector3.Distance (transform.position,target);
 				if(t>2.0f){
 					break;//failsafe to stop birds from getting stuck
@@ -362,7 +362,7 @@ public class lb_Bird : MonoBehaviour {
 		}
 		if(idle){
 			//the bird is in the idle animation, lets randomly choose a behavior every 3 seconds
-			if (Random.value < Time.deltaTime*.33){
+			if (Random.value < TimeInterface.deltaTime*.33){
 				//bird will display a behavior
 				//in the perched state the bird can only sing, preen, or ruffle
 				float rand = Random.value;
@@ -389,7 +389,7 @@ public class lb_Bird : MonoBehaviour {
 				anim.SetFloat ("IdleAgitated",Random.value);
 			}
 			//birds should fly to a new target about every 10 seconds
-			if (Random.value < Time.deltaTime*.1){
+			if (Random.value < TimeInterface.deltaTime*.1){
 				FlyAway ();
 			}
 		}

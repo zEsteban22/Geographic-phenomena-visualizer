@@ -4,20 +4,8 @@ using UnityEngine;
 
 public class TimeSpeedTester : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        GameSystem.timeSpeedDown=1/GameSystem.SECONDS_PER_YEAR;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void putTimeSpeed(int timeSpeed){
-        GameSystem.timeSpeedUp = (float) timeSpeed;
+        TimeInterface.TimeScale = (float) timeSpeed;
     }
     public void x1(){
         putTimeSpeed(1);

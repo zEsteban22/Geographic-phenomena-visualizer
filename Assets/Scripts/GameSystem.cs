@@ -20,9 +20,7 @@ public class GameSystem : MonoBehaviour
 
     public static float timeStep = 0; 
     private static int LAST_STEP = 12; 
-    public static float timeSpeedUp = 1;
-    public static float timeSpeedDown = 0;
-    private static float _lastTimeScale = 1;
+    private static double _lastTimeScale = 1;
     public static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
     private static GameSystem _instance;
     void Start()
@@ -32,8 +30,7 @@ public class GameSystem : MonoBehaviour
 
     void Update()
     {
-        //timeStep += Time.deltaTime /SECONDS_PER_YEAR * timeSpeedUp * timeSpeedDown;
-        timeStep += Time.deltaTime /Time.timeScale * timeSpeedUp * timeSpeedDown;
+        timeStep += (float) (TimeInterface.deltaTime/SECONDS_PER_YEAR);
         if (timeStep < 0f){
             PlayPauseFunctionality.putPlay();
             stop();
@@ -49,7 +46,7 @@ public class GameSystem : MonoBehaviour
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
-        text.text = String.Format("year = " + timeStep.ToString("F2") + "; time speed = {0}", timeSpeedUp * timeSpeedDown);
+        text.text = String.Format("year = " + timeStep.ToString("F2") + "; time speed = {0}", TimeInterface.TimeScale);
         slider.value = timeStep/LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         
@@ -67,9 +64,9 @@ public class GameSystem : MonoBehaviour
     {
         if(await Task.Run(()=>_instance.transitionSystem.simulationToRealTime())){
             //_lastTimeScale = Time.timeScale;
-            if (timeSpeedDown != 0)
-                _lastTimeScale = timeSpeedDown;
-            timeSpeedDown = 0;
+            if (TimeInterface.SpeedDown != 0)
+                _lastTimeScale = TimeInterface.SpeedDown;
+            TimeInterface.SpeedDown = 0;
         } else {
             Debug.Log("transition stopped");
         }
@@ -79,14 +76,14 @@ public class GameSystem : MonoBehaviour
     {
         if(await Task.Run(()=>_instance.transitionSystem.realTimeToSimulation())){
             //Time.timeScale = _lastTimeScale;  
-            timeSpeedDown = _lastTimeScale;  
+            TimeInterface.SpeedDown = (float)_lastTimeScale;  
         } else {
             Debug.Log("play transition stopped");
         }
     }
     public static void changeSpeedUp(Transform palanca)
     {
-        timeSpeedUp = (1.0f + palanca.rotation.x) / 2.0f * 10.0f ; 
+        TimeInterface.SpeedUp = (1.0f + palanca.rotation.x) / 2.0f * 10.0f; 
     }
 
 
@@ -97,7 +94,7 @@ public class GameSystem : MonoBehaviour
             angulo = 0.5f + (angulo-0.7f)/0.3f/2f;
         else if (angulo <= 0.7)
             angulo = angulo/0.7f/2f;
-        timeSpeedDown = (float) -Math.Cos(Math.PI * angulo);
+        TimeInterface.SpeedDown = (float) -Math.Cos(Math.PI * angulo);
 
     }
 
