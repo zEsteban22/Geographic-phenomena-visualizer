@@ -39,14 +39,14 @@ public class TransitionSystem : MonoBehaviour
     void Update()
     {
         //transform.Rotate(rotationSpeedRT * Time.deltaTime, 0f, 0f);
-        transform.Rotate(actualRotationSpeed * Time.deltaTime, 0f, 0f);
+        transform.Rotate(actualRotationSpeed * TimeInterface.deltaTime, 0f, 0f);
         if (startTransition){
             transitioning = true;
             startTransition = false;
             lapsed = 0f;
         }
         if (transitioning){
-            lapsed += Time.deltaTime / Time.timeScale;
+            lapsed += Time.deltaTime;
             if (RTtoST){                
                 //Time.timeScale = (float)(A*Math.Pow(lapsed/TRANSITION_DURATION,POWER) + 1);
                 actualRotationSpeed = (float)(A*Math.Pow(lapsed/TRANSITION_DURATION,POWER) + rotationSpeedRT);
