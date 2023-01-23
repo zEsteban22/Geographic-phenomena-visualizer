@@ -562,7 +562,9 @@ public class lb_Bird : MonoBehaviour {
 	}
 
 	void Update () {
-		if(onGround && !paused && !dead){
+		GetComponent<AudioSource>().pitch = TimeInterface.TimeScale;
+
+        if (onGround && !paused && !dead){
 			OnGroundBehaviors();	
 		}
 	}

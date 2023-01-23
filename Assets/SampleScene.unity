@@ -5894,6 +5894,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: df7ea2100717be848b451a13b033d593, type: 3}
   - {fileID: 21300000, guid: a274b6524da4bd745b35f4d9ea4220c1, type: 3}
   - {fileID: 21300000, guid: 44d40705df576d840be09250ef7a8c69, type: 3}
+  oceanSound: {fileID: 1077340738}
+  mixer: {fileID: 24300002, guid: 966de2f3da2f24941a1485614d9c6d1a, type: 2}
 --- !u!1 &991007679
 GameObject:
   m_ObjectHideFlags: 0
@@ -6619,7 +6621,7 @@ MonoBehaviour:
   _viewpoint: {fileID: 0}
   _camera: {fileID: 937038388}
   _teleportThreshold: 10
-  _timeProvider: {fileID: 0}
+  _timeProvider: {fileID: 1634767659}
   _primaryLight: {fileID: 1432482975}
   _searchForPrimaryLightOnStartup: 1
   _material: {fileID: 2100000, guid: ef94c26e44a36e24a9dcbc5995a2bed1, type: 2}
@@ -6687,7 +6689,7 @@ AudioSource:
   m_GameObject: {fileID: 1077340735}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 966de2f3da2f24941a1485614d9c6d1a, type: 2}
   m_audioClip: {fileID: 8300000, guid: b24c4891dfeefbc4a92c948113d2c3a6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -9366,26 +9368,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1634767658}
-  - component: {fileID: 1634767657}
+  - component: {fileID: 1634767659}
+  - component: {fileID: 1634767660}
   m_Layer: 0
-  m_Name: TimeInterface
+  m_Name: TimeProvider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1634767657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1634767656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cc7c8384f0847a40805c6cacf56ff2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1634767658
 Transform:
   m_ObjectHideFlags: 0
@@ -9401,6 +9392,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1634767659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634767656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f02c000dd23b95349acae40e1938c4a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _version: 0
+  _paused: 0
+  _overrideTime: 0
+  _time: 0
+  _overrideDeltaTime: 0
+  _deltaTime: 0
+--- !u!114 &1634767660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634767656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc7c8384f0847a40805c6cacf56ff2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1645080069
 GameObject:
   m_ObjectHideFlags: 0
@@ -10331,6 +10352,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 1ca5316dd08051f42b31052d31beefed, type: 3}
+      propertyPath: mixer
+      value: 
+      objectReference: {fileID: 24300002, guid: 966de2f3da2f24941a1485614d9c6d1a, type: 2}
     - target: {fileID: 11400000, guid: 1ca5316dd08051f42b31052d31beefed, type: 3}
       propertyPath: robin
       value: 0

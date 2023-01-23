@@ -4,67 +4,88 @@ using UnityEngine;
 
 public class TimeSpeedTester : MonoBehaviour
 {
-    private void putTimeSpeed(int timeSpeed){
-        TimeInterface.TimeScale = (float) timeSpeed;
+    private void putTimeSpeed(int timeSpeed)
+    {
+        TimeInterface.TimeScale = (float)timeSpeed;
     }
-    public void x1(){
+    public void x1()
+    {
         putTimeSpeed(1);
     }
-    public void x2(){
+    public void x2()
+    {
         putTimeSpeed(2);
     }
-    public void x4(){
+    public void x4()
+    {
         putTimeSpeed(4);
     }
-    public void x8(){
+    public void x8()
+    {
         putTimeSpeed(8);
     }
-    public void x16(){
+    public void x16()
+    {
         putTimeSpeed(16);
     }
-    public void x32(){
+    public void x32()
+    {
         putTimeSpeed(32);
     }
-    public void x64(){
+    public void x64()
+    {
         putTimeSpeed(64);
     }
-    public void x128(){
+    public void x128()
+    {
         putTimeSpeed(128);
     }
-    public void x256(){
+    public void x256()
+    {
         putTimeSpeed(256);
     }
-    public void x512(){
+    public void x512()
+    {
         putTimeSpeed(512);
     }
-    public void x1024(){
+    public void x1024()
+    {
         putTimeSpeed(1024);
     }
-    public void x2048(){
+    public void x2048()
+    {
         putTimeSpeed(2048);
     }
-    public void x4096(){
+    public void x4096()
+    {
         putTimeSpeed(4096);
     }
-    public void minutes(){
+    public void minutes()
+    {
         putTimeSpeed(60);
     }
-    public void hours(){
+    public void hours()
+    {
         putTimeSpeed(3600);
     }
-    public void days(){
+    public void days()
+    {
         putTimeSpeed(86400);
     }
-    public void weeks(){
+    public void weeks()
+    {
         putTimeSpeed(604800);
     }
-    public void months(){
+    public void months()
+    {
         putTimeSpeed(2629800);
     }
-    public void semesters(){
+    public void semesters()
+    {
         putTimeSpeed(15778800);
     }
-    public void years(){
+    public void years()
+    {
         putTimeSpeed(220903200);// ~2^27.71883
     }
 

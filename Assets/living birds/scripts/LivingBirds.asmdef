@@ -1,0 +1,16 @@
+{
+    "name": "LivingBirds",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c1778319da1814f45998a8a2a6b6d432"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

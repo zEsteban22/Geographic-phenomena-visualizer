@@ -55,7 +55,7 @@ namespace Crest
             // well in edit mode
             if (!_paused)
             {
-                _timeInternal += Time.deltaTime;
+                _timeInternal += TimeInterface.deltaTime;
             }
         }
 

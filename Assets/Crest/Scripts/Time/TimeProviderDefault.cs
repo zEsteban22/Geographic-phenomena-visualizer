@@ -25,7 +25,7 @@ namespace Crest
                     return (float)OceanRenderer.LastUpdateEditorTime;
                 }
 #else
-                return Time.deltaTime;
+                return TimeInterface.deltaTime;
 #endif
             }
         }
@@ -44,7 +44,7 @@ namespace Crest
                     return 1f / 20f;
                 }
 #else
-                return Time.deltaTime;
+                return TimeInterface.deltaTime;
 #endif
                 ;
             }

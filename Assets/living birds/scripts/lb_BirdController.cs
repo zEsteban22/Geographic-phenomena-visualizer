@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class lb_BirdController : MonoBehaviour {
 	public int idealNumberOfBirds;
@@ -11,6 +12,7 @@ public class lb_BirdController : MonoBehaviour {
 	public bool collideWithObjects = true;
 	public LayerMask groundLayer;
 	public float birdScale = 1.0f;
+	public AudioMixerGroup mixer;
 
 	public bool robin = true;
 	public bool blueJay = true;
@@ -120,7 +122,9 @@ public class lb_BirdController : MonoBehaviour {
 			myBirds[i].transform.parent = transform;
 			myBirds[i].SendMessage ("SetController",this);
 			myBirds[i].SetActive (false);
-		}
+			myBirds[i].GetComponent<AudioSource>().outputAudioMixerGroup = mixer;
+
+        }
 
 		//find all the targets
 		GameObject[] groundTargets = GameObject.FindGameObjectsWithTag("lb_groundTarget");

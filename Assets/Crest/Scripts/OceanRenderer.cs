@@ -1213,7 +1213,7 @@ namespace Crest
             {
                 if (_teleportTimerForHeightQueries > 0f)
                 {
-                    _teleportTimerForHeightQueries -= Time.deltaTime;
+                    _teleportTimerForHeightQueries -= TimeInterface.deltaTime;
                 }
 
                 var hasTeleported = _isFirstFrameSinceEnabled;
