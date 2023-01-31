@@ -54,36 +54,51 @@ namespace Crest
             // Use default TP delta time to update our time, because this dt works
             // well in edit mode
             if (!_paused)
-            {
-                _timeInternal += TimeInterface.deltaTime;
+            { 
+                _timeInternal += Time.deltaTime;
             }
         }
-
         public override float CurrentTime
         {
             get
             {
-                // Override means override
-                if (_overrideTime)
-                {
-                    return _time;
-                }
-
-                // In edit mode, update is seldom called, so rely on the default TP
 #if UNITY_EDITOR
-                if (!EditorApplication.isPlaying && !_paused)
+                if (UnityEditor.EditorApplication.isPlaying)
                 {
-                    return _tpDefault.CurrentTime;
+                    return Time.time;
                 }
+                else
+                {
+                    return (float)OceanRenderer.LastUpdateEditorTime;
+                }
+#else
+                return TimeInterface.deltaTime;
 #endif
-
-                // Otherwise use our accumulated time
-                return _timeInternal;
             }
         }
 
-        // Either use override, or the default TP which works in edit mode
-        public override float DeltaTime => _overrideDeltaTime ? _deltaTime : _tpDefault.DeltaTime;
+        public override float DeltaTime
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (UnityEditor.EditorApplication.isPlaying)
+                {
+                    return Time.deltaTime;
+                }
+                else
+                {
+                    return 1f / 20f;
+                }
+#else
+                return TimeInterface.deltaTime;
+#endif
+                ;
+            }
+
+        }
+
+
         public override float DeltaTimeDynamics => DeltaTime;
     }
 }
