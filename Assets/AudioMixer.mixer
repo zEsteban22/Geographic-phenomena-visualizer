@@ -16,6 +16,8 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: 4081565bf35c93b42b881d6293f59cd2
+    name: Volume
   - guid: b8cc51c6907f84440a14426358f0195c
     name: Pitch
   m_AudioMixerGroupViews:
@@ -67,7 +69,8 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: b0741d8e469975d44bd0df50eb1d72e6
-  m_FloatValues: {}
+  m_FloatValues:
+    4081565bf35c93b42b881d6293f59cd2: 0
   m_TransitionOverrides: {}
 --- !u!244 &6824147850986674416
 AudioMixerEffectController:

@@ -42,7 +42,8 @@ namespace Crest
         TimeProviderDefault _tpDefault = new TimeProviderDefault();
 
         float _timeInternal = 0f;
-
+        [SerializeField]
+        int MaximumSpeed = 40;
         private void Start()
         {
             // May as well start on the same time value as unity
@@ -51,29 +52,38 @@ namespace Crest
 
         private void Update()
         {
-            // Use default TP delta time to update our time, because this dt works
-            // well in edit mode
             if (!_paused)
-            { 
-                _timeInternal += Time.deltaTime;
+            {
+                _timeInternal += _getTime();
             }
+        }
+        private float _getTime()
+        {
+            if (TimeInterface.exists)
+                return TimeInterface.TimeScale < MaximumSpeed ? TimeInterface.deltaTime : TimeInterface.deltaTime / TimeInterface.TimeScale * MaximumSpeed;
+            else
+                return Time.deltaTime;
         }
         public override float CurrentTime
         {
             get
             {
+                // Override means override
+                if (_overrideTime)
+                {
+                    return _time;
+                }
+
+                // In edit mode, update is seldom called, so rely on the default TP
 #if UNITY_EDITOR
-                if (UnityEditor.EditorApplication.isPlaying)
+                if (!EditorApplication.isPlaying && !_paused)
                 {
-                    return Time.time;
+                    return _tpDefault.CurrentTime;
                 }
-                else
-                {
-                    return (float)OceanRenderer.LastUpdateEditorTime;
-                }
-#else
-                return TimeInterface.deltaTime;
 #endif
+
+                // Otherwise use our accumulated time
+                return _timeInternal;
             }
         }
 
@@ -84,14 +94,14 @@ namespace Crest
 #if UNITY_EDITOR
                 if (UnityEditor.EditorApplication.isPlaying)
                 {
-                    return Time.deltaTime;
+                    return _getTime();
                 }
                 else
                 {
                     return 1f / 20f;
                 }
 #else
-                return TimeInterface.deltaTime;
+                return _getTime();
 #endif
                 ;
             }

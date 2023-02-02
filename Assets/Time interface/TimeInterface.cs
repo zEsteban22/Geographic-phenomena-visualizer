@@ -2,10 +2,11 @@
 using UnityEngine;
 public class TimeInterface : MonoBehaviour
 {
-    private static TimeInterface _instance;
+    private static TimeInterface _instance = null;
     private float timeScale = 1f;
     private float speedUp = 1;
     private float speedDown = 1;
+    public static bool exists { get { return _instance != null; } } 
     void Start()
     {
         _instance = this;
@@ -21,11 +22,18 @@ public class TimeInterface : MonoBehaviour
     {
         get
         {
-            return _instance.timeScale * _instance.speedUp * _instance.speedDown;
+            return _instance.timeScale;
         }
         set
         {
             _instance.timeScale = value;
+        }
+    }
+    public static float time
+    {
+        get
+        {
+            return Time.time * _instance.timeScale;
         }
     }
     public static float SpeedUp

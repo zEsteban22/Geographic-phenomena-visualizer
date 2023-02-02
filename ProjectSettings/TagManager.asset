@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Terrain
+  - lb_groundTarget
+  - lb_perchTarget
+  - Tree
   layers:
   - Default
   - TransparentFX

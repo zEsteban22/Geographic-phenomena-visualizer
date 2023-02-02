@@ -13,11 +13,10 @@ public class GameSystem : MonoBehaviour
     public TMP_Text text;
     public Slider slider;
     public TransitionSystem transitionSystem;
-    public GameObject growingTree;
     public List<GameObject> meshes;
     public GameObject terrain;
     public SpriteRenderer backgroundCityRenderer;
-    public List<Sprite> citySprites; //at this moment there is 12 city sprites, one for year
+    public List<Sprite> citySprites; 
     public AudioSource oceanSound;
     public static float timeStep = 0;
     private static int LAST_STEP = 12;
@@ -26,6 +25,8 @@ public class GameSystem : MonoBehaviour
     private static GameSystem _instance;
     [SerializeField]
     private AudioMixerGroup mixer;
+    [SerializeField]
+    private int MaximumSpeed = 16;
     void Start()
     {
         _instance = this;
@@ -46,15 +47,23 @@ public class GameSystem : MonoBehaviour
             timeStep = LAST_STEP;
         }
         float treeGrowthState = timeStep / LAST_STEP;
-        growingTree.transform.localScale = Vector3.one * treeGrowthState;
+        foreach(GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
+        {
+            growingTree.transform.localScale = Vector3.one * treeGrowthState;
+        }
+        
         GameObject mesh = _getElement(meshes);
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
-        text.text = String.Format("year = " + timeStep.ToString("F5") + "; time speed = {D10}", TimeInterface.TimeScale);
+        text.text = String.Format("year = " + timeStep.ToString("F8") + "; time speed = "+ String.Format("{0:0.0000}", TimeInterface.TimeScale));
         slider.value = timeStep / LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         oceanSound.pitch = TimeInterface.TimeScale;
+        if (TimeInterface.TimeScale > MaximumSpeed)
+            mixer.audioMixer.SetFloat("Volume", -80f);
+        else 
+            mixer.audioMixer.SetFloat("Volume", 0f);
         mixer.audioMixer.SetFloat("Pitch", 1f / TimeInterface.TimeScale);
 
     }

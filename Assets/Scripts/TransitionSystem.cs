@@ -8,38 +8,46 @@ using System.Threading;
 public class TransitionSystem : MonoBehaviour
 {
     [SerializeField]
-    private float finalDaysPerSecond = 60;
+    float finalTimeSpeed = 60 * 60 * 24 * (365.25f/12) * 2;
     [SerializeField]
-    private float TRANSITION_DURATION = 5f;
+    float initialTimeSpeed= 1;
     [SerializeField]
-    private float POWER = 22;
+    float TRANSITION_DURATION = 5f;
+    [SerializeField]
+    float POWER = 22;
+    [SerializeField]
+    private int MaximumSpeed = 60 * 60 * 24 * 2;
     [SerializeField]
     private lb_BirdController birds;
     [SerializeField]
     private AudioSource soundtrack;
     private float rotationSpeedST;
-    private float rotationSpeedRT;
-    private float actualRotationSpeed;
+    private float rotationSpeedRT = 360f/(24*60*60);
+    float actualRotationSpeed;
     private bool startTransition = false;
     private bool transitioning = false;
     private float lapsed = 0f;
     private bool RTtoST = true;
     
     private float A;
-    // Start is called before the first frame update
-    void Start()
+
+    void CalculateInternalParameters()
     {
-        rotationSpeedRT = 360f/(24*60*60);
-        rotationSpeedST = 360f * finalDaysPerSecond;
+        rotationSpeedST = 360f * finalTimeSpeed;
         actualRotationSpeed = rotationSpeedRT;
         //A = 31557599;
         A = rotationSpeedST - rotationSpeedRT;
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        CalculateInternalParameters();
     }
     // Update is called once per frame
     void Update()
     {
         //transform.Rotate(rotationSpeedRT * Time.deltaTime, 0f, 0f);
-        transform.Rotate(actualRotationSpeed * TimeInterface.deltaTime, 0f, 0f);
+        transform.Rotate(actualRotationSpeed * (TimeInterface.TimeScale < MaximumSpeed? TimeInterface.deltaTime: 0), 0f, 0f);
         if (startTransition){
             transitioning = true;
             startTransition = false;
@@ -88,6 +96,7 @@ public class TransitionSystem : MonoBehaviour
         }
         
     }
+
     public bool simulationToRealTime(){
         if (transitioning){
             lapsed = TRANSITION_DURATION - lapsed;
