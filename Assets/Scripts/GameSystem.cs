@@ -26,7 +26,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField]
     private AudioMixerGroup mixer;
     [SerializeField]
-    private int MaximumSpeed = 16;
+    private int MaximumSpeed = 24;
     void Start()
     {
         _instance = this;
@@ -49,7 +49,7 @@ public class GameSystem : MonoBehaviour
         float treeGrowthState = timeStep / LAST_STEP;
         foreach(GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
         {
-            growingTree.transform.localScale = Vector3.one * treeGrowthState;
+            growingTree.transform.localScale = Vector3.one * treeGrowthState * float.Parse(growingTree.name.Split(" ")[0]);
         }
         
         GameObject mesh = _getElement(meshes);
@@ -60,10 +60,8 @@ public class GameSystem : MonoBehaviour
         slider.value = timeStep / LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         oceanSound.pitch = TimeInterface.TimeScale;
-        if (TimeInterface.TimeScale > MaximumSpeed)
-            mixer.audioMixer.SetFloat("Volume", -80f);
-        else 
-            mixer.audioMixer.SetFloat("Volume", 0f);
+        if (TimeInterface.TimeScale <= MaximumSpeed)
+            mixer.audioMixer.SetFloat("Volume", (1-TimeInterface.TimeScale/MaximumSpeed)*100-80);
         mixer.audioMixer.SetFloat("Pitch", 1f / TimeInterface.TimeScale);
 
     }
