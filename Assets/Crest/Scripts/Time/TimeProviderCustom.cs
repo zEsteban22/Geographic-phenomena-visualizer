@@ -43,7 +43,7 @@ namespace Crest
 
         float _timeInternal = 0f;
         [SerializeField]
-        int MaximumSpeed = 40;
+        int SpeedThreshold = 20;
         private void Start()
         {
             // May as well start on the same time value as unity
@@ -60,7 +60,10 @@ namespace Crest
         private float _getTime()
         {
             if (TimeInterface.exists)
-                return TimeInterface.TimeScale < MaximumSpeed ? TimeInterface.deltaTime : TimeInterface.deltaTime / TimeInterface.TimeScale * MaximumSpeed;
+                if (TimeInterface.TimeScale < SpeedThreshold)
+                    return TimeInterface.deltaTime;
+                else
+                    return 0;
             else
                 return Time.deltaTime;
         }

@@ -18,6 +18,10 @@ public class GameSystem : MonoBehaviour
     public SpriteRenderer backgroundCityRenderer;
     public List<Sprite> citySprites; 
     public AudioSource oceanSound;
+    [SerializeField]
+    private lb_BirdController birds;
+    [SerializeField]
+    private float birdsThreshold = 3600;
     public static float timeStep = 0;
     private static int LAST_STEP = 12;
     private static double _lastTimeScale = 1;
@@ -26,7 +30,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField]
     private AudioMixerGroup mixer;
     [SerializeField]
-    private int MaximumSpeed = 24;
+    private int soundThreshold = 24;
     void Start()
     {
         _instance = this;
@@ -47,23 +51,35 @@ public class GameSystem : MonoBehaviour
             timeStep = LAST_STEP;
         }
         float treeGrowthState = timeStep / LAST_STEP;
-        foreach(GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
-        {
-            growingTree.transform.localScale = Vector3.one * treeGrowthState * float.Parse(growingTree.name.Split(" ")[0]);
-        }
-        
+        foreach (GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
+            growingTree.transform.localScale = Vector3.one * treeGrowthState * float.Parse(growingTree.name);
+
         GameObject mesh = _getElement(meshes);
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
-        text.text = String.Format("year = " + timeStep.ToString("F8") + "; time speed = "+ String.Format("{0:0.0000}", TimeInterface.TimeScale));
+        text.text = String.Format("year = " + timeStep.ToString("F6") + "; time speed = " + String.Format("{0:00000.000}", TimeInterface.TimeScale));
         slider.value = timeStep / LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         oceanSound.pitch = TimeInterface.TimeScale;
-        if (TimeInterface.TimeScale <= MaximumSpeed)
-            mixer.audioMixer.SetFloat("Volume", (1-TimeInterface.TimeScale/MaximumSpeed)*100-80);
-        mixer.audioMixer.SetFloat("Pitch", 1f / TimeInterface.TimeScale);
-
+        if (TimeInterface.TimeScale < soundThreshold)
+        {
+            mixer.audioMixer.SetFloat("Volume", (1 - TimeInterface.TimeScale / soundThreshold) * 100 - 80);
+            mixer.audioMixer.SetFloat("Pitch", 1f / TimeInterface.TimeScale);
+        }
+        else if (TimeInterface.TimeScale >= soundThreshold)
+            mixer.audioMixer.SetFloat("Volume", -80);
+        if (TimeInterface.TimeScale <= birdsThreshold && !birds.gameObject.activeSelf)
+        {
+            birds.gameObject.SetActive(true);
+            birds.AllUnPause();
+            birds.AllFlee();
+        }
+        else if (TimeInterface.TimeScale > birdsThreshold && birds.gameObject.activeSelf)
+        {
+            birds.AllPause();
+            birds.gameObject.SetActive(false);
+        }
     }
 
 

@@ -8,35 +8,33 @@ using System.Threading;
 public class TransitionSystem : MonoBehaviour
 {
     [SerializeField]
-    float finalTimeSpeed = 60 * 60 * 24 * (365.25f/12) * 2;
+    float finalTimeSpeed = 60 * 60 * 24 * 60.875f;
     [SerializeField]
-    float initialTimeSpeed= 1;
+    float initialTimeSpeed = 1;
     [SerializeField]
     float TRANSITION_DURATION = 5f;
     [SerializeField]
     float POWER = 22;
     [SerializeField]
-    private int MaximumSpeed = 60 * 60 * 24 * 2;
-    [SerializeField]
-    private lb_BirdController birds;
+    private float SunThreshold = 60 * 60 * 24 * 60.875f;
     [SerializeField]
     private AudioSource soundtrack;
+    [SerializeField]
+    private float P = 0.01f;
+    private float K;
     private float rotationSpeedST;
-    private float rotationSpeedRT = 360f/(24*60*60);
+    private float rotationSpeedRT = 360f / (24 * 60 * 60);
     float actualRotationSpeed;
     private bool startTransition = false;
     private bool transitioning = false;
     private float lapsed = 0f;
-    private bool RTtoST = true;
-    
-    private float A;
+    private bool RTtoST = true; 
 
     void CalculateInternalParameters()
     {
         rotationSpeedST = 360f * finalTimeSpeed;
         actualRotationSpeed = rotationSpeedRT;
-        //A = 31557599;
-        A = rotationSpeedST - rotationSpeedRT;
+        K = (float)(Math.Log(finalTimeSpeed / P - 1) / (TRANSITION_DURATION / 2));
     }
     // Start is called before the first frame update
     void Start()
@@ -46,8 +44,7 @@ public class TransitionSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //transform.Rotate(rotationSpeedRT * Time.deltaTime, 0f, 0f);
-        transform.Rotate(actualRotationSpeed * (TimeInterface.TimeScale < MaximumSpeed? TimeInterface.deltaTime: 0), 0f, 0f);
+        transform.Rotate(actualRotationSpeed * (TimeInterface.TimeScale <= SunThreshold? TimeInterface.deltaTime: 0), 0f, 0f);
         if (startTransition){
             transitioning = true;
             startTransition = false;
@@ -56,39 +53,18 @@ public class TransitionSystem : MonoBehaviour
         if (transitioning){
             lapsed += Time.deltaTime;
             if (RTtoST){                
-                //Time.timeScale = (float)(A*Math.Pow(lapsed/TRANSITION_DURATION,POWER) + 1);
-                actualRotationSpeed = (float)(A*Math.Pow(lapsed/TRANSITION_DURATION,POWER) + rotationSpeedRT);
-                if (actualRotationSpeed / rotationSpeedRT < 100)
-                    Time.timeScale = actualRotationSpeed / rotationSpeedRT;
-                if (birds.gameObject.activeSelf && actualRotationSpeed / rotationSpeedRT >= 100){//Time.timeScale >= 7948800){
-                    Time.timeScale = 1f;
-                    soundtrack.Pause();
-                    birds.AllPause();
-                    birds.gameObject.SetActive(false);
-                }
-                if(actualRotationSpeed >= rotationSpeedST){//Time.timeScale >= A){
-                    actualRotationSpeed = 0f;
+                TimeInterface.TimeScale = (float)(finalTimeSpeed/(1+Math.Pow(Math.E,-K*(lapsed - TRANSITION_DURATION/2))));
+                if(lapsed >= TRANSITION_DURATION)
+                {
                     lapsed = TRANSITION_DURATION;
                     transform.rotation = Quaternion.Euler(60f, 0f, 0f);
                     transitioning = false;
                 }
             }
-            else {
-                //Time.timeScale = (float)(A*Math.Pow(1 - lapsed/TRANSITION_DURATION,POWER) + 1);
-                actualRotationSpeed = (float)(A*Math.Pow(1 - lapsed/TRANSITION_DURATION,POWER) + rotationSpeedRT);
-                if (actualRotationSpeed / rotationSpeedRT < 100){//Time.timeScale < 7948800 && 
-                    Time.timeScale = actualRotationSpeed / rotationSpeedRT;
-                    if(!birds.gameObject.activeSelf){
-                            birds.gameObject.SetActive(true);
-                            birds.AllUnPause();
-                            birds.AllFlee();
-                            soundtrack.Play();
-                            Time.timeScale = 1f;            /*//Carefull*/
-                    }
-                }
-                if(lapsed >= TRANSITION_DURATION){//Time.timeScale == 1){
+            else{
+                TimeInterface.TimeScale = finalTimeSpeed * (float)(1 - 1 / (1 + Math.Pow(Math.E, -K * (lapsed - TRANSITION_DURATION / 2))));
+                if(lapsed >= TRANSITION_DURATION){
                     lapsed = TRANSITION_DURATION;
-                    actualRotationSpeed = rotationSpeedRT;
                     transitioning = false;
                     transform.rotation = Quaternion.Euler(60f, 0f, 0f);
                 }
@@ -98,11 +74,15 @@ public class TransitionSystem : MonoBehaviour
     }
 
     public bool simulationToRealTime(){
-        if (transitioning){
+        if (transitioning)
+        {
             lapsed = TRANSITION_DURATION - lapsed;
         }
-        else 
+        else
+        {
             startTransition = true;
+            lapsed = 0f;
+        }
         actualRotationSpeed = actualRotationSpeed == 0? rotationSpeedST: actualRotationSpeed;
         RTtoST = false;
         return true;
