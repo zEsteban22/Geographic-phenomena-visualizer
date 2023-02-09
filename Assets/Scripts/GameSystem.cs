@@ -23,7 +23,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField]
     private float birdsThreshold = 3600;
     public static float timeStep = 0;
-    private static int LAST_STEP = 12;
+    public static int LAST_STEP = 12;
     private static double _lastTimeScale = 1;
     public static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
     private static GameSystem _instance;
@@ -50,10 +50,10 @@ public class GameSystem : MonoBehaviour
             PlayPauseFunctionality.putPlay();
             timeStep = LAST_STEP;
         }
-        float treeGrowthState = timeStep / LAST_STEP;
+        /*float treeGrowthState = timeStep / LAST_STEP;
         foreach (GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
             growingTree.transform.localScale = Vector3.one * treeGrowthState * float.Parse(growingTree.name);
-
+        */
         GameObject mesh = _getElement(meshes);
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
