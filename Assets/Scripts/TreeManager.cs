@@ -25,18 +25,18 @@ public class TreeManager : MonoBehaviour
         for (int i = 0; i < trees.Count; i++)
         {
             if (!trees[i].activeSelf) continue;
-            trees[i].transform.localScale = Vector3.one * (GameSystem.timeStep - origins[i]) / GameSystem.LAST_STEP;
+            trees[i].transform.localScale = Vector3.one * (GameSystem.TimeStep - origins[i]) / GameSystem.LAST_STEP;
             Physics.Raycast(trees[i].transform.position, Vector3.down, out hit);
             if (hit.distance > 0.1)
             {
                 trees[i].SetActive(false);
-                deadTrees.Add(new Tuple<GameObject, float>(trees[i], GameSystem.timeStep));
+                deadTrees.Add(new Tuple<GameObject, float>(trees[i], GameSystem.TimeStep));
             }
         }
         for (int i = 0; i < deadTrees.Count; i++)
         {
             var tuple = deadTrees[i];
-            if (GameSystem.timeStep<tuple.Item2)
+            if (GameSystem.TimeStep<tuple.Item2)
             {
                 tuple.Item1.SetActive(true);
                 deadTrees.Remove(tuple);

@@ -35,7 +35,7 @@ public class CameraTool : MonoBehaviour
             newMinimapIcon.GetComponent<TeleportationAnchor>().teleportAnchorTransform = teleportDestination.transform;
             
             //Put the picture time in the name of the object to also save the time of the interesting point
-            newMinimapIcon.gameObject.name = string.Format("TpAnchor at t={0:F2}, XYZ={1:F2} {2:F2} {3:F2}", GameSystem.timeStep, transform.position.x, transform.position.y, transform.position.z);
+            newMinimapIcon.gameObject.name = string.Format("TpAnchor at t={0:F2}, XYZ={1:F2} {2:F2} {3:F2}", GameSystem.TimeStep, transform.position.x, transform.position.y, transform.position.z);
         }
     }
 }

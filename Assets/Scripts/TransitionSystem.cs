@@ -10,11 +10,7 @@ public class TransitionSystem : MonoBehaviour
     [SerializeField]
     float finalTimeSpeed = 60 * 60 * 24 * 60.875f;
     [SerializeField]
-    float initialTimeSpeed = 1;
-    [SerializeField]
     float TRANSITION_DURATION = 5f;
-    [SerializeField]
-    float POWER = 22;
     [SerializeField]
     private float SunThreshold = 60 * 60 * 24 * 60.875f;
     [SerializeField]

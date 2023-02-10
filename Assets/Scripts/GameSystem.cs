@@ -16,13 +16,13 @@ public class GameSystem : MonoBehaviour
     public List<GameObject> meshes;
     public GameObject terrain;
     public SpriteRenderer backgroundCityRenderer;
-    public List<Sprite> citySprites; 
+    public List<Sprite> citySprites;
     public AudioSource oceanSound;
     [SerializeField]
     private lb_BirdController birds;
     [SerializeField]
     private float birdsThreshold = 3600;
-    public static float timeStep = 0;
+    public float timeStep = 0;
     public static int LAST_STEP = 12;
     private static double _lastTimeScale = 1;
     public static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60
@@ -81,11 +81,20 @@ public class GameSystem : MonoBehaviour
             birds.gameObject.SetActive(false);
         }
     }
-
-
+    public static float TimeStep
+    {
+        get
+        {
+            return _instance.timeStep;
+        }
+    }
+    public static Mesh TerrainMesh()
+    {
+        return _instance.terrain.GetComponent<MeshCollider>().sharedMesh; 
+    }
     public static void stop()
     {
-        timeStep = 0;
+        _instance.timeStep = 0;
         pause();
 
     }
@@ -136,14 +145,14 @@ public class GameSystem : MonoBehaviour
 
     public static void changeTime(Slider slider)
     {
-        timeStep = LAST_STEP * slider.value;
+        _instance.timeStep = LAST_STEP * slider.value;
     }
 
     public static void changeTime(GameObject iconSelected)
     {
         Regex re = new Regex(@"t=([^,]*,\d{2}),");
         Match m = re.Match(iconSelected.name);
-        timeStep = float.Parse(m.Groups[1].Value);
+        _instance.timeStep = float.Parse(m.Groups[1].Value);
     }
 
     private T _getElement<T>(List<T> list) where T : UnityEngine.Object
