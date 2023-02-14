@@ -16,15 +16,13 @@ public class AnimalsController : MonoBehaviour
     
     void Start(){}
 
-    
+
     void Update()
     {
-        if(appearedOnTime + timeToDisappear < GameSystem.TimeStep)
+        if (appearedOnTime + timeToDisappear < GameSystem.TimeStep)//|| appearedOnTime > GameSystem.TimeStep)
         {
-            appearedOnTime = GameSystem.TimeStep;
-            Debug.Log(cadaver.transform.position);
+            //appearedOnTime = GameSystem.TimeStep - (appearedOnTime > GameSystem.TimeStep? timeToDisappear: 0);
             cadaver.transform.position = RandomPointOnMesh.GetRandomPointOnMesh(GameSystem.TerrainMesh());
-            Debug.Log(cadaver.transform.position);
         }
     }
 
@@ -77,13 +75,8 @@ public class AnimalsController : MonoBehaviour
             }
             //and then turn them back to a Vector3
             Vector3 pointOnMesh = a + r * (b - a) + s * (c - a);
-            pointOnMesh *= 50520.01f;
-            Vector3 p = new Vector3();
-            p.x = pointOnMesh.x;
-            p.y = pointOnMesh.z;
-            p.z = pointOnMesh.y;
-            p.y += 2f;
-            return p;
+            pointOnMesh *= 50520f;
+            return new Vector3(pointOnMesh.x, pointOnMesh.z + 1.1f, -pointOnMesh.y );
 
         }
         private static float[] GetTriSizes(int[] tris, Vector3[] verts)
