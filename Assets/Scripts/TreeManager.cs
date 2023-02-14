@@ -26,8 +26,9 @@ public class TreeManager : MonoBehaviour
         {
             if (!trees[i].activeSelf) continue;
             trees[i].transform.localScale = Vector3.one * (GameSystem.TimeStep - origins[i]) / GameSystem.LAST_STEP;
-            Physics.Raycast(trees[i].transform.position, Vector3.down, out hit);
-            if (hit.distance > 0.1)
+            
+            if (Physics.Raycast(trees[i].transform.position, Vector3.down, out hit) && hit.collider.tag == "Terrain" &&
+                hit.distance > 0.1)
             {
                 trees[i].SetActive(false);
                 deadTrees.Add(new Tuple<GameObject, float>(trees[i], GameSystem.TimeStep));
