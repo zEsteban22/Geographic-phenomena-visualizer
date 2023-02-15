@@ -11,38 +11,53 @@ public class AnimalsController : MonoBehaviour
     [SerializeField]
     float timeToDisappear = 1f;
     [SerializeField]
-    float minHigh = 8.1522f;
+    float maxDistance = 30f;
+   static float  OFFSET = 1.1f;
     private float appearedOnTime = 0f;
+    private Camera mainCamera;
     
-    void Start(){}
+    void Start(){
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+    }
 
 
     void Update()
     {
         if (appearedOnTime + timeToDisappear < GameSystem.TimeStep)//|| appearedOnTime > GameSystem.TimeStep)
         {
-            //appearedOnTime = GameSystem.TimeStep - (appearedOnTime > GameSystem.TimeStep? timeToDisappear: 0);
-            cadaver.transform.position = RandomPointOnMesh.GetRandomPointOnMesh(GameSystem.TerrainMesh());
+            appearedOnTime = GameSystem.TimeStep;// - (appearedOnTime > GameSystem.TimeStep? timeToDisappear: 0);
+            Vector3 newPosition;
+            do {
+                newPosition = RandomPointOnMesh.GetRandomPointOnMesh(GameSystem.TerrainMesh());
+            } while (Vector3.Distance(newPosition, mainCamera.transform.position) > maxDistance);
+            cadaver.transform.position = newPosition;
+        } else {
+            cadaver.transform.position = cadaver.transform.position + new Vector3(0, -2*OFFSET*TimeInterface.deltaTime*(timeToDisappear/GameSystem.SECONDS_PER_YEAR), 0);
         }
     }
 
     class RandomPointOnMesh : MonoBehaviour
     {
-        //Extraído de: https://gist.github.com/v21/5378391
+        private static Mesh calculatedMesh;
+        private static float[] sizes;
+        private static float[]cumulativeSizes;
+        private static float total;
+        //Extraï¿½do de: https://gist.github.com/v21/5378391
         public static Vector3 GetRandomPointOnMesh(Mesh mesh)
         {
-            //if you're repeatedly doing this on a single mesh, you'll likely want to cache cumulativeSizes and total
-            float[] sizes = GetTriSizes(mesh.triangles, mesh.vertices);
-            float[] cumulativeSizes = new float[sizes.Length];
-            float total = 0;
+            if (mesh != calculatedMesh){
+                calculatedMesh = mesh;
+                sizes = GetTriSizes(mesh.triangles, mesh.vertices);
+                cumulativeSizes = new float[sizes.Length];
+                total = 0;
 
-            for (int i = 0; i < sizes.Length; i++)
-            {
-                total += sizes[i];
-                cumulativeSizes[i] = total;
+                for (int i = 0; i < sizes.Length; i++)
+                {
+                    total += sizes[i];
+                    cumulativeSizes[i] = total;
+                }
             }
-
-            //so everything above this point wants to be factored out
+            
 
             float randomsample = Random.value * total;
 
@@ -76,7 +91,7 @@ public class AnimalsController : MonoBehaviour
             //and then turn them back to a Vector3
             Vector3 pointOnMesh = a + r * (b - a) + s * (c - a);
             pointOnMesh *= 50520f;
-            return new Vector3(pointOnMesh.x, pointOnMesh.z + 1.1f, -pointOnMesh.y );
+            return new Vector3(pointOnMesh.x, pointOnMesh.z + OFFSET, -pointOnMesh.y );
 
         }
         private static float[] GetTriSizes(int[] tris, Vector3[] verts)
