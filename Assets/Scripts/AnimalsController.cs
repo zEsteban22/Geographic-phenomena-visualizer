@@ -59,13 +59,13 @@ public class AnimalsController : MonoBehaviour
             }
             
 
-            float randomsample = Random.value * total;
+            float random_sample = Random.value * total;
 
             int triIndex = -1;
 
             for (int i = 0; i < sizes.Length; i++)
             {
-                if (randomsample <= cumulativeSizes[i])
+                if (random_sample <= cumulativeSizes[i])
                 {
                     triIndex = i;
                     break;
@@ -77,8 +77,6 @@ public class AnimalsController : MonoBehaviour
             Vector3 a = mesh.vertices[mesh.triangles[triIndex * 3]];
             Vector3 b = mesh.vertices[mesh.triangles[triIndex * 3 + 1]];
             Vector3 c = mesh.vertices[mesh.triangles[triIndex * 3 + 2]];
-
-            //generate random barycentric coordinates
 
             float r = Random.value;
             float s = Random.value;

@@ -46,14 +46,10 @@ public class GameSystem : MonoBehaviour
         }
         if (timeStep > LAST_STEP)
         {
-            pause();
+            TimeInterface.TimeScale = 1f;//pause();
             PlayPauseFunctionality.putPlay();
             timeStep = LAST_STEP;
         }
-        /*float treeGrowthState = timeStep / LAST_STEP;
-        foreach (GameObject growingTree in GameObject.FindGameObjectsWithTag("Tree"))
-            growingTree.transform.localScale = Vector3.one * treeGrowthState * float.Parse(growingTree.name);
-        */
         GameObject mesh = _getElement(meshes);
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
