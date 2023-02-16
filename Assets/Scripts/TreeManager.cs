@@ -30,6 +30,12 @@ public class TreeManager : MonoBehaviour
             if (Physics.Raycast(trees[i].transform.position, Vector3.down, out hit) && hit.collider.tag == "Terrain" &&
                 hit.distance > 0.1)
             {
+                /*
+                Debug.Log(hit.collider.gameObject.name);
+                GameObject o = new GameObject("aaaaaaaaaaaa");
+                o.transform.position = trees[i].transform.position;
+                o = new GameObject("bbbbbbbbbbb");
+                o.transform.position = hit.collider.transform.position;*/
                 trees[i].SetActive(false);
                 deadTrees.Add(new Tuple<GameObject, float>(trees[i], GameSystem.TimeStep));
             }

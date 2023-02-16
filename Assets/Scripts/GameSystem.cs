@@ -54,6 +54,9 @@ public class GameSystem : MonoBehaviour
         //The update of the terrain is a workaround due all the terrain mesh filter and colliders are precalculated
         terrain.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         terrain.GetComponent<MeshCollider>().sharedMesh = mesh.GetComponent<MeshCollider>().sharedMesh;
+        //workaround due ocean crest hard to addapt.
+        terrain.transform.parent.gameObject.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
+        
         text.text = String.Format("year = " + timeStep.ToString("F6") + "; time speed = " + String.Format("{0:00000.000}", TimeInterface.TimeScale));
         slider.value = timeStep / LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
