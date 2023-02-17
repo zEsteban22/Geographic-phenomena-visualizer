@@ -30,7 +30,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField]
     private AudioMixerGroup mixer;
     [SerializeField]
-    private int soundThreshold = 24;
+    private int soundThreshold;
     void Start()
     {
         _instance = this;
