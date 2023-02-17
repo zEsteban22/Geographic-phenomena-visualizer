@@ -9,10 +9,10 @@ public class AnimalsController : MonoBehaviour
     [SerializeField]
     GameObject cadaver;
     [SerializeField]
-    float timeToDisappear = 1f;
+    float timeToDisappear = 4/52f;
     [SerializeField]
     float maxDistance = 30f;
-   static float  OFFSET = 1.88652f;
+   static float  OFFSET = 1f;
     private float appearedOnTime = 0f;
     private Camera mainCamera;
     
@@ -31,7 +31,7 @@ public class AnimalsController : MonoBehaviour
                 newPosition = RandomPointOnMesh.GetRandomPointOnMesh(GameSystem.TerrainMesh());
             } while (Vector3.Distance(newPosition, mainCamera.transform.position) > maxDistance);
             cadaver.transform.parent.position = newPosition;
-            cadaver.transform.localPosition =  new Vector3(-0.9857146f, 1.88652f, 1.511613f);
+            cadaver.transform.localPosition =  new Vector3(-0.9857146f, OFFSET, 1.511613f);
         } else {
             cadaver.transform.position = cadaver.transform.position + new Vector3(0, -2*OFFSET * TimeInterface.deltaTime*(timeToDisappear/GameSystem.SECONDS_PER_YEAR), 0);
         }
