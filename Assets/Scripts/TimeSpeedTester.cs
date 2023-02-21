@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class TimeSpeedTester : MonoBehaviour
 {
+    private bool future = true;
     private void putTimeSpeed(int timeSpeed)
     {
-        TimeInterface.TimeScale = (float)timeSpeed;
+        TimeInterface.TimeScale = (float)timeSpeed*(future?1:-1);
     }
+    public void changeTimeDirection() { future = future == false; }
     public void x1()
     {
         putTimeSpeed(1);
