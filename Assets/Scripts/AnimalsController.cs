@@ -33,7 +33,7 @@ public class AnimalsController : MonoBehaviour
             cadaver.transform.parent.position = newPosition;
             cadaver.transform.localPosition =  new Vector3(-0.9857146f, OFFSET, 1.511613f);
         } else {
-            cadaver.transform.position = cadaver.transform.position + new Vector3(0, -2*OFFSET * TimeInterface.deltaTime*(timeToDisappear/GameSystem.SECONDS_PER_YEAR), 0);
+            cadaver.transform.position = cadaver.transform.position + new Vector3(0, (-2 * OFFSET * TimeInterface.deltaTime) / (timeToDisappear * GameSystem.SECONDS_PER_YEAR), 0);
         }
     }
 

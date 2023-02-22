@@ -23,7 +23,7 @@ public class SimulationSound : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         mixerGroup = audioSource.outputAudioMixerGroup;
         A = (float)(NormalTimeSpeed *(1-ScaleModifier));
-        K = (float)(100/Sqrt(NormalTimeSpeed));
+        mixerGroup.audioMixer.SetFloat("Volume", -80);
     }
 
     void Update()
@@ -31,7 +31,10 @@ public class SimulationSound : MonoBehaviour
         t = System.Math.Abs(TimeInterface.TimeScale);
         audioSource.pitch = (float)((A + ScaleModifier * t) / NormalTimeSpeed);
         mixerGroup.audioMixer.SetFloat("Pitch", (float)(NormalTimeSpeed / (A + ScaleModifier * t)));
-        mixerGroup.audioMixer.SetFloat("Volume", K*Sqrt(t)-30>=0?0:(float)(K * Sqrt(t) - 30));
+        if (t >= 32) 
+            mixerGroup.audioMixer.SetFloat("Volume", t > NormalTimeSpeed? 0f : (float)((NormalTimeSpeed * (1 - volumeIncreaseRate) + volumeIncreaseRate * t) / NormalTimeSpeed));
+        else
+            mixerGroup.audioMixer.SetFloat("Volume", -80);
         //mixerGroup.audioMixer.SetFloat("Volume", (float)((System.Math.Abs(TimeInterface.TimeScale) / NormalTimeSpeed) * 100 - 80));
     }
 }

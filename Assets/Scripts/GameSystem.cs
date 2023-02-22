@@ -57,13 +57,13 @@ public class GameSystem : MonoBehaviour
         //workaround due ocean crest hard to addapt.
         terrain.transform.parent.gameObject.GetComponent<MeshFilter>().sharedMesh = mesh.GetComponent<MeshFilter>().sharedMesh;
         
-        text.text = String.Format("year = " + timeStep.ToString("F6") + "; time speed = " + String.Format("{0:00000.000}", TimeInterface.TimeScale));
+        text.text = String.Format("year = {0,5:f3}; months = {1,6:f3}; weeks = {2,7:f3}; days = {3,8:f3}; day time = {4,2:D2}:{5,2:D2}:{6,2:D2}", timeStep, timeStep * 12, timeStep * 52.17857, timeStep * 365.25, (int)(timeStep * SECONDS_PER_YEAR / 60 / 60 % 24), (int)(timeStep * SECONDS_PER_YEAR / 60 % 60), (int)(timeStep * SECONDS_PER_YEAR % 60));
         slider.value = timeStep / LAST_STEP;
         backgroundCityRenderer.sprite = _getElement(citySprites);
         oceanSound.pitch = TimeInterface.TimeScale;
         if (TimeInterface.TimeScale < soundThreshold)
         {
-            mixer.audioMixer.SetFloat("Volume", (1 - TimeInterface.TimeScale / soundThreshold) * 100 - 80);
+            mixer.audioMixer.SetFloat("Volume", (1 - TimeInterface.TimeScale / soundThreshold) * 100 - 100);
             mixer.audioMixer.SetFloat("Pitch", 1f / TimeInterface.TimeScale);
         }
         else if (TimeInterface.TimeScale >= soundThreshold)
