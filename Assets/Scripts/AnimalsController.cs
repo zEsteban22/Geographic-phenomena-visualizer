@@ -12,12 +12,17 @@ public class AnimalsController : MonoBehaviour
     float timeToDisappear = 4/52f;
     [SerializeField]
     float maxDistance = 30f;
-   static float  OFFSET = 1f;
+    [SerializeField]
+    private List<Vector3> spawnPoints = new List<Vector3>();
+    private int actualSpawnPoint = 0;
+    static float  OFFSET = 1f;
     private float appearedOnTime = 0f;
     private Camera mainCamera;
     
+    
     void Start(){
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        cadaver.transform.parent.position = spawnPoints[actualSpawnPoint++ % spawnPoints.Count];
     }
 
 
@@ -26,11 +31,7 @@ public class AnimalsController : MonoBehaviour
         if (appearedOnTime + timeToDisappear < GameSystem.TimeStep)//|| appearedOnTime > GameSystem.TimeStep)
         {
             appearedOnTime = GameSystem.TimeStep;// - (appearedOnTime > GameSystem.TimeStep? timeToDisappear: 0);
-            Vector3 newPosition;
-            do {
-                newPosition = RandomPointOnMesh.GetRandomPointOnMesh(GameSystem.TerrainMesh());
-            } while (Vector3.Distance(newPosition, mainCamera.transform.position) > maxDistance);
-            cadaver.transform.parent.position = newPosition;
+            cadaver.transform.parent.position = spawnPoints[actualSpawnPoint++%spawnPoints.Count];
             cadaver.transform.localPosition =  new Vector3(-0.9857146f, OFFSET, 1.511613f);
         } else {
             cadaver.transform.position = cadaver.transform.position + new Vector3(0, (-2 * OFFSET * TimeInterface.deltaTime) / (timeToDisappear * GameSystem.SECONDS_PER_YEAR), 0);
