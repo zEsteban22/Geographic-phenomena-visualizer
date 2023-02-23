@@ -11,8 +11,8 @@ public class SimulationSound : MonoBehaviour
     private double NormalTimeSpeed = 86400;
     [SerializeField]
     private float ScaleModifier = 1f / 8f;
-    [SerializeField]
-    private float volumeIncreaseRate = 0.2f;
+    //[SerializeField]
+    //private float volumeIncreaseRate = 0.2f;
     private float A;
     private float K;
     private AudioSource audioSource;
