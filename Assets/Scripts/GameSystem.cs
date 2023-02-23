@@ -41,13 +41,11 @@ public class GameSystem : MonoBehaviour
         timeStep += (float)(TimeInterface.deltaTime / SECONDS_PER_YEAR);
         if (timeStep < 0f)
         {
-            PlayPauseFunctionality.putPlay();
             stop();
         }
         if (timeStep > LAST_STEP)
         {
-            TimeInterface.TimeScale = 1f;//pause();
-            PlayPauseFunctionality.putPlay();
+            TimeInterface.TimeScale = 1f;
             timeStep = LAST_STEP;
         }
         GameObject mesh = _getElement(meshes);
