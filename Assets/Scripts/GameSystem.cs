@@ -22,7 +22,7 @@ public class GameSystem : MonoBehaviour
     private lb_BirdController birds;
     [SerializeField]
     private float birdsThreshold = 3600;
-    public float timeStep = 0;
+    private float timeStep = 0;
     public static int LAST_STEP = 12;
     private static double _lastTimeScale = 1;
     public static int SECONDS_PER_YEAR = 31557600; // 365.25 * 24 * 60 * 60

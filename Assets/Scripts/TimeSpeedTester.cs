@@ -14,33 +14,33 @@ public class TimeSpeedTester : MonoBehaviour
     {
         putTimeSpeed(1);
     }
-    public void x2()
+    public void x32768()
     {
-        putTimeSpeed(2);
+        putTimeSpeed(32768);
     }
-    public void x4()
+    public void x262144()
     {
-        putTimeSpeed(4);
+        putTimeSpeed(262144);
     }
     public void x8()
     {
         putTimeSpeed(8);
     }
-    public void x16()
+    public void x2097152()
     {
-        putTimeSpeed(16);
+        putTimeSpeed(2097152);
     }
-    public void x32()
+    public void x16777216()
     {
-        putTimeSpeed(32);
+        putTimeSpeed(16777216);
     }
     public void x64()
     {
         putTimeSpeed(64);
     }
-    public void x128()
+    public void x8388608()
     {
-        putTimeSpeed(128);
+        putTimeSpeed(8388608);
     }
     public void x256()
     {
@@ -50,9 +50,9 @@ public class TimeSpeedTester : MonoBehaviour
     {
         putTimeSpeed(512);
     }
-    public void x1024()
+    public void x32()
     {
-        putTimeSpeed(1024);
+        putTimeSpeed(32);
     }
     public void x2048()
     {
